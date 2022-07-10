@@ -1,0 +1,13 @@
+Id,FirstName,Surname,Dob,Address,Postcode
+
+1,John,Smith,23/09/1980,'15, Station Road, Cambridge','CB3 5RR'
+
+2,John,,23/09/1980,,
+
+3,Jane,Smith,2/5/1984,'15, Station Road, Cambridge','CB3 5RR'
+
+4,Anshika,Mandal,1965-03-03,'512, London Road, Newark-on-Trent, Nottinghamshire','NG23 5RS'
+
+5,Alessandro,Romano,12/15/1992,'22, Cat Walk, Pentrefoelas, Clwyd','LL24 3ED'
+
+6,,Romano,15/12/1992,,'LL24 3ED'
