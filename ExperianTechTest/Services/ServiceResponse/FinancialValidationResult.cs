@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using ExperianTechTest.Models;
 
 namespace ExperianTechTest.Services.ServiceResponse
 {
@@ -28,5 +29,7 @@ namespace ExperianTechTest.Services.ServiceResponse
         }
 
         public Dictionary<int, List<string>> ErrorRecords { get; set; }
+
+        public List<Finance> SucessRecords { get; set; }
     }
 }

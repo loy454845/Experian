@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Moq;
 using Microsoft.Extensions.Logging;
+using Microsoft.Azure.CosmosRepository;
+using ExperianTechTest.Items;
 
 [TestClass]
 public class PersonControllerTests
@@ -22,7 +24,7 @@ public class PersonControllerTests
     private Mock<IFileHelper> _fileHelperMock = new Mock<IFileHelper>();
     private IConfiguration? _configuration;
     private Mock<ILogger<PersonController>> _logger = new Mock<ILogger<PersonController>>();
-
+    private Mock<IRepository<PersonItem>> _repository = new Mock<IRepository<PersonItem>>();
     private IValidator<IFormFile>? _fileValidator;
 
     [TestInitialize]
@@ -45,7 +47,7 @@ public class PersonControllerTests
     {
         //Arrange
         FileUploadDto personFileDto = new FileUploadDto();
-        var sut = new PersonController( _personServiceMock.Object, _fileHelperMock.Object, _fileValidator, _logger.Object);
+        var sut = new PersonController( _personServiceMock.Object, _fileHelperMock.Object, _fileValidator, _logger.Object, _repository.Object);
         var response = await sut.Post(personFileDto);
 
         //Act
@@ -69,7 +71,7 @@ public class PersonControllerTests
         {
             File = formFileMock.Object
         };
-        var sut = new PersonController( _personServiceMock.Object, _fileHelperMock.Object, _fileValidator, _logger.Object);
+        var sut = new PersonController( _personServiceMock.Object, _fileHelperMock.Object, _fileValidator, _logger.Object, _repository.Object);
 
         //Act
         var response = await sut.Post(personFileDto);
@@ -93,7 +95,7 @@ public class PersonControllerTests
         {
             File = formFileMock.Object
         };
-        var sut = new PersonController( _personServiceMock.Object, _fileHelperMock.Object, _fileValidator, _logger.Object);
+        var sut = new PersonController( _personServiceMock.Object, _fileHelperMock.Object, _fileValidator, _logger.Object, _repository.Object);
         var response = await sut.Post(personFileDto);
         var result = response as BadRequestObjectResult;
 
@@ -152,7 +154,7 @@ public class PersonControllerTests
         {
             File = formFileMock.Object
         };
-        var sut = new PersonController(_personServiceMock.Object, _fileHelperMock.Object, _fileValidator, _logger.Object);
+        var sut = new PersonController(_personServiceMock.Object, _fileHelperMock.Object, _fileValidator, _logger.Object, _repository.Object);
         var response = await sut.Post(personFileDto);
         var result = response as OkObjectResult;
         var personValidation = result?.Value as PersonValidationResult;
@@ -181,7 +183,7 @@ public class PersonControllerTests
         _fileHelperMock.Setup(x => x.ReadFileContentToStringAsync(It.IsAny<IFormFile>())).ThrowsAsync(new Exception());
 
         //Assert
-        var sut = new PersonController(_personServiceMock.Object, _fileHelperMock.Object, _fileValidator, _logger.Object);
+        var sut = new PersonController(_personServiceMock.Object, _fileHelperMock.Object, _fileValidator, _logger.Object, _repository.Object);
         var response = await sut.Post(personFileDto);
 
          var result = response as StatusCodeResult;

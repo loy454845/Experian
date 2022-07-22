@@ -4,6 +4,7 @@ using FluentValidation;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using ExperianTechTest.Models;
+using ExperianTechTest.Exceptions;
 
 namespace ExperianTechTest.Services
 {
@@ -25,26 +26,32 @@ namespace ExperianTechTest.Services
             var lstPersons = _csvToPerson.GetRecords(persons);
             List<Person> validRecords = new List<Person>();
             Dictionary<int, List<string>> errorRecords = new Dictionary<int, List<string>>();
-            foreach (Person person in lstPersons)
-            {
-                var res = _personValidator.Validate(person);
-                if (res.IsValid)
-                {
-                    validRecords.Add(person);
-                    continue;
-                }
-                var errorMessage = res.Errors;
-                var errorMessages = (from item in errorMessage
-                                     select item.ErrorMessage).ToList();
-                errorRecords.Add(person.Id, value: errorMessages);
-                _logger.LogInformation($"Person with {person.Id} is not a valid record.");
-            }
 
-            return new PersonValidationResult
+            if (lstPersons != null)
             {
-                ValidRecords = validRecords.Count,
-                ErrorRecords = errorRecords
-            };
+                foreach (Person person in lstPersons)
+                {
+                    var res = _personValidator.Validate(person);
+                    if (res.IsValid)
+                    {
+                        validRecords.Add(person);
+                        continue;
+                    }
+                    var errorMessage = res.Errors;
+                    var errorMessages = (from item in errorMessage
+                                         select item.ErrorMessage).ToList();
+                    errorRecords.Add(person.Id, value: errorMessages);
+                    _logger.LogInformation($"Person with {person.Id} is not a valid record.");
+                }
+
+                return new PersonValidationResult
+                {
+                    SucessRecords = validRecords,
+                    ValidRecords = validRecords.Count,
+                    ErrorRecords = errorRecords
+                };
+            }
+            throw new FileInvalidException();
         }
 
     }

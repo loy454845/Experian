@@ -40,12 +40,13 @@ public class FinancialService : IFinancialService
                 var errorMessage = res.Errors;
                 var errorMessages = (from item in errorMessage
                                      select item.ErrorMessage).ToList();
-                errorRecords.Add(finance.Id, value: errorMessages);
+                errorRecords.Add(finance.Id , value: errorMessages);
                 _logger.LogInformation($"Finance with Id: {finance.Id} is not a valid record.");
 
             }
             return new FinancialValidationResult
             {
+                SucessRecords = financeValidRecords,
                 ValidRecords = financeValidRecords.Count,
                 ErrorRecords = errorRecords
             };
